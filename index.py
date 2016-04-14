@@ -47,7 +47,9 @@ cursor.execute("SELECT * FROM NewsOrder")
 news = cursor.fetchone()
 
 # print the rows
-for row in news :
-    print row
+while news is not None :
+    for row in news:
+        print row
+    news = cursor.fetchone()
 
 cnx.close()
