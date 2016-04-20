@@ -1,15 +1,16 @@
 import urllib2
 import re
+import feedparser
 
 from mysql.connector import (connection)
 
-cnx = connection.MySQLConnection(user='root', password='1234',
+db = connection.MySQLConnection(user='root', password='1234',
                                  host='127.0.0.1',
                                  database='NewsData',
                                  charset='utf8')
 
 # prepare a cursor object using cursor() method
-cursor = cnx.cursor()
+cursor = db.cursor()
 
 # Drop table if it already exist using execute() method.
 cursor.execute("DROP TABLE IF EXISTS NewsOrder")
@@ -21,26 +22,18 @@ sql = """CREATE TABLE NewsOrder (
 cursor.execute(sql)
 
 
-response = urllib2.urlopen('http://www.hirunews.lk/rss/sinhala.xml')
-html = str(response.read())
+feed = feedparser.parse('http://www.hirunews.lk/rss/sinhala.xml')
+for entry in feed['items']:
 
-splitStr = re.split('<title>|</title>',html)
-
-count = 5;
-while count < splitStr.__len__():
-
-    # Prepare SQL query to INSERT a record into the database.
-    sql = "INSERT INTO NewsOrder(News) VALUES ('%s') " %  (splitStr[count])
+    sql = "INSERT INTO NewsOrder(News) VALUES ('%s') " % (entry['title'])
+    #print (entry['link'])
     try:
-        # Execute the SQL command
         cursor.execute(sql)
-        # Commit your changes in the database
-        cnx.commit()
+        db.commit()
     except:
         # Rollback in case there is any error
-        cnx.rollback()
+        db.rollback()
 
-    count = count + 2
 
 cursor.execute("SELECT * FROM NewsOrder")
 
@@ -52,4 +45,4 @@ while news is not None :
         print row
     news = cursor.fetchone()
 
-cnx.close()
+db.close()
