@@ -1,11 +1,4 @@
-<<<<<<< HEAD:NewsList/index.py
-=======
-import urllib2
-
 import feedparser
-import requests
-from flask import *
->>>>>>> 5961b433700f44cd5f44919a42daf8d5cf44a514:SNCR_BackEnd/NewsList/index.py
 from flask_restful import Resource
 
 from mysql.connector import (connection)
@@ -21,8 +14,6 @@ class main(Resource):
         # prepare a cursor object using cursor() method
         cursor = db.cursor()
 
-<<<<<<< HEAD:NewsList/index.py
-=======
         # Drop table if it already exist using execute() method.
         cursor.execute("DROP TABLE IF EXISTS NewsOrder")
 
@@ -43,7 +34,6 @@ class main(Resource):
                 # Rollback in case there is any error
                 db.rollback()
 
->>>>>>> 5961b433700f44cd5f44919a42daf8d5cf44a514:SNCR_BackEnd/NewsList/index.py
 
         cursor.execute("SELECT * FROM NewsOrder")
 
