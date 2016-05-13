@@ -2,6 +2,7 @@
 from Classifier import *
 import json
 import io
+from mysql.connector import (connection)
 def _decode_list(data):
     rv = []
     for item in data:
@@ -56,10 +57,42 @@ with io.open(tamFile, 'r', encoding=('utf-8-sig')) as f:
 
 cl = Classifier(spamKB, hamKB,jamKB,pamKB,tamKB)
 
-f = io.open('test_sample.txt', 'r',encoding=('utf-8-sig')).read()
+db = connection.MySQLConnection(user='root', password='',
+                                host='127.0.0.1',
+                                database='NewsData',
+                                charset='utf8')
 
-print(cl.is_ham(f))
-print(cl.is_spam(f))
-print(cl.is_jam(f))
-print(cl.is_pam(f))
-print(cl.is_tam(f))
+# prepare a cursor object using cursor() method
+cursor = db.cursor()
+
+cursor.execute("SELECT * FROM NewsOrder")
+
+news = cursor.fetchall()
+for row in news:
+    if row[6]==0:
+        file=io.open('test_sample.txt', 'w', encoding=('utf-8-sig'))
+        file.write(row[3])
+        f = io.open('test_sample.txt', 'r', encoding=('utf-8-sig')).read()
+        defence=cl.is_ham(f)
+        sport=cl.is_tam(f)
+        art=cl.is_spam(f)
+        politics=cl.is_pam(f)
+        economy=cl.is_jam(f)
+        if art['result']:
+            sql = "UPDATE NewsOrder SET category = '1' WHERE ID = '%s'" % (row[0])
+        elif defence['result']:
+            sql = "UPDATE NewsOrder SET category = '2' WHERE ID = '%s'" % (row[0])
+        elif economy['result']:
+            sql = "UPDATE NewsOrder SET category = '3' WHERE ID = '%s'" % (row[0])
+        elif politics['result']:
+            sql = "UPDATE NewsOrder SET category = '4' WHERE ID = '%s'" % (row[0])
+        else:
+            sql = "UPDATE NewsOrder SET category = '5' WHERE ID = '%s'" % (row[0])
+
+        cursor.execute(sql)
+        db.commit()
+        print(cl.is_ham(f))
+        print(cl.is_spam(f))
+        print(cl.is_jam(f))
+        print(cl.is_pam(f))
+        print(cl.is_tam(f))

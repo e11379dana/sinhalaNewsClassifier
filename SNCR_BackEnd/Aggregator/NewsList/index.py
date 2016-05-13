@@ -6,7 +6,7 @@ from mysql.connector import (connection)
 
 class main(Resource):
     def get(self):
-        db = connection.MySQLConnection(user='root', password='ilovepera',
+        db = connection.MySQLConnection(user='root', password='',
                                          host='127.0.0.1',
                                          database='NewsData',
                                          charset='utf8')
