@@ -1,28 +1,23 @@
-<<<<<<< HEAD:NewsList/index.py
-=======
-import urllib2
+import urllib.request as urllib2
 
 import feedparser
 import requests
 from flask import *
->>>>>>> 5961b433700f44cd5f44919a42daf8d5cf44a514:SNCR_BackEnd/NewsList/index.py
 from flask_restful import Resource
+from markupsafe import unichr
 
 from mysql.connector import (connection)
 
 
 class main(Resource):
     def get(self):
-        db = connection.MySQLConnection(user='root', password='ilovepera',
+        db = connection.MySQLConnection(user='root', password='',
                                          host='127.0.0.1',
-                                         database='NewsData',
+                                         database='newsdata',
                                          charset='utf8')
 
         # prepare a cursor object using cursor() method
         cursor = db.cursor()
-
-<<<<<<< HEAD:NewsList/index.py
-=======
         # Drop table if it already exist using execute() method.
         cursor.execute("DROP TABLE IF EXISTS NewsOrder")
 
@@ -32,10 +27,12 @@ class main(Resource):
 
         cursor.execute(sql)
         feed = feedparser.parse('http://www.hirunews.lk/rss/sinhala.xml')
+
         for entry in feed['items']:
 
             sql = "INSERT INTO NewsOrder(title,link,description) VALUES ('%s','%s','%s') " % (entry['title'],entry['link'],entry['description'])
             #print (entry['link'])
+
             try:
                 cursor.execute(sql)
                 db.commit()
@@ -43,7 +40,6 @@ class main(Resource):
                 # Rollback in case there is any error
                 db.rollback()
 
->>>>>>> 5961b433700f44cd5f44919a42daf8d5cf44a514:SNCR_BackEnd/NewsList/index.py
 
         cursor.execute("SELECT * FROM NewsOrder")
 
@@ -60,4 +56,3 @@ class main(Resource):
 
         db.close()
         return (newsList)
-
