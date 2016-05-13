@@ -3,6 +3,7 @@ import urllib.request as urllib2
 import feedparser
 import requests
 from flask import *
+import feedparser
 from flask_restful import Resource
 from markupsafe import unichr
 
@@ -18,6 +19,8 @@ class main(Resource):
 
         # prepare a cursor object using cursor() method
         cursor = db.cursor()
+
+
         # Drop table if it already exist using execute() method.
         cursor.execute("DROP TABLE IF EXISTS NewsOrder")
 
