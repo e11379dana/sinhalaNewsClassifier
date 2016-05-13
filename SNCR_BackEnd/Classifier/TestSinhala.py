@@ -1,6 +1,7 @@
 
 from Classifier import *
 import json
+import io
 def _decode_list(data):
     rv = []
     for item in data:
@@ -37,15 +38,15 @@ tamFile = 'sport.json'
 # f = open(newFile, 'wb').write(b'\xef\xbb\xbf{"data":\r\n    {"mobileHelp":\r\n        {"value":\r\n            {\r\n            "ID1":{"children": [1,2,3,4,5]},\r\n            "ID2":{"children": []},\r\n            "ID3":{"children": [6,7,8,9,10]}\r\n            }\r\n        }\r\n    }\r\n}')
 
 # print(byteify(newFile))
-with open(spamFile, 'r', encoding=('utf-8-sig')) as f:
+with io.open(spamFile, 'r', encoding=('utf-8-sig')) as f:
     spamKB = json.loads(f.read())
-with open(hamFile, 'r', encoding=('utf-8-sig')) as f:
+with io.open(hamFile, 'r', encoding=('utf-8-sig')) as f:
     hamKB = json.loads(f.read())
-with open(jamFile, 'r', encoding=('utf-8-sig')) as f:
+with io.open(jamFile, 'r', encoding=('utf-8-sig')) as f:
     jamKB = json.loads(f.read())
-with open(pamFile, 'r', encoding=('utf-8-sig')) as f:
+with io.open(pamFile, 'r', encoding=('utf-8-sig')) as f:
     pamKB = json.loads(f.read())
-with open(tamFile, 'r', encoding=('utf-8-sig')) as f:
+with io.open(tamFile, 'r', encoding=('utf-8-sig')) as f:
     tamKB = json.loads(f.read())
 #print(spamKB)
 #print(hamKB)
@@ -55,7 +56,7 @@ with open(tamFile, 'r', encoding=('utf-8-sig')) as f:
 
 cl = Classifier(spamKB, hamKB,jamKB,pamKB,tamKB)
 
-f = open('test_sample.txt', 'r',encoding=('utf-8-sig')).read()
+f = io.open('test_sample.txt', 'r',encoding=('utf-8-sig')).read()
 
 print(cl.is_ham(f))
 print(cl.is_spam(f))

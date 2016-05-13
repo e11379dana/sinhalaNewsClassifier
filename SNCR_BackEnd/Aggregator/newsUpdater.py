@@ -18,18 +18,21 @@ def job():
 
     # Create table as per requirement
     sql = """CREATE TABLE NewsOrder (
-                title  VARCHAR(1000), link  VARCHAR(1000), description VARCHAR(1000), pubDate VARCHAR(1000)) ENGINE = InnoDB DEFAULT CHARSET=utf8"""
+                title  VARCHAR(1000), link  VARCHAR(1000), description VARCHAR(1000), pubDate VARCHAR(1000), category VARCHAR(10)) ENGINE = InnoDB DEFAULT CHARSET=utf8"""
 
     cursor.execute(sql)
 
 
     feed = feedparser.parse('http://www.hirunews.lk/rss/sinhala.xml')
     for entry in feed['items']:
-        sql = "INSERT INTO NewsOrder(title,link,description) VALUES ('%s','%s','%s') " % (entry['title'],entry['link'],entry['description'])
+        description = entry['description'].split("..")
+        print description
+        sql = "INSERT INTO NewsOrder(title,link,description) VALUES ('%s','%s','%s') " % (entry['title'],entry['link'],description[0])
         #print (entry['link'])
         try:
             cursor.execute(sql)
             db.commit()
+            print "Schedular is running"
         except:
             # Rollback in case there is any error
             db.rollback()
