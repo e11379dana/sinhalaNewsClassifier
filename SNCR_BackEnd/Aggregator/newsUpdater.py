@@ -22,11 +22,9 @@ def job():
     cursor.execute("DROP TABLE IF EXISTS NewsOrder")
 
     # Create table as per requirement
-    sql = """CREATE TABLE NewsOrder (
-                title  VARCHAR(1000), link  VARCHAR(1000), description VARCHAR(1000), pubDate VARCHAR(1000), imgLink VARCHAR(11000)) ENGINE = InnoDB DEFAULT CHARSET=utf8"""
+    sql = """CREATE TABLE NewsOrder (ID int NOT NULL AUTO_INCREMENT, title  VARCHAR(1000), link  VARCHAR(1000), description VARCHAR(1000), pubDate VARCHAR(1000), imgLink VARCHAR(11000), category int, PRIMARY KEY (ID)) ENGINE = InnoDB DEFAULT CHARSET=utf8"""
 
     cursor.execute(sql)
-
 
     feed = feedparser.parse('http://www.hirunews.lk/rss/sinhala.xml')
     for entry in feed['items']:
@@ -41,14 +39,14 @@ def job():
         soup = BeautifulSoup(res, "html.parser")
         rows = soup.find_all('div', attrs={"class": "latest-pic"})
         ans = re.findall('"([^"]*)"', str(rows))
-        print(ans[2])
 
-        sql = "INSERT INTO NewsOrder(title,link,description,imgLink) VALUES ('%s','%s','%s','%s') " % (
-        entry['title'], entry['link'], entry['description'],ans[2])
+        sql = "INSERT INTO NewsOrder(title,link,description,imgLink,category) VALUES ('%s','%s','%s','%s','%s') " % (
+        entry['title'], entry['link'], entry['description'],ans[2],0)
 
         try:
             cursor.execute(sql)
             db.commit()
+            print("Scheduler is running.......")
         except:
             # Rollback in case there is any error
             db.rollback()
