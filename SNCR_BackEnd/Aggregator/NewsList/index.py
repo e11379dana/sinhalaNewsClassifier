@@ -5,8 +5,8 @@ from mysql.connector import (connection)
 
 
 class main(Resource):
-    def get(self):
-        db = connection.MySQLConnection(user='root', password='',
+    def get(self, Category):
+        db = connection.MySQLConnection(user='root', password='1234',
                                          host='127.0.0.1',
                                          database='NewsData',
                                          charset='utf8')
@@ -15,6 +15,7 @@ class main(Resource):
         cursor = db.cursor()
 
         cursor.execute("SELECT * FROM NewsOrder")
+        print Category
 
         news = cursor.fetchall()
         newsList = []
