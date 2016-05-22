@@ -2,7 +2,7 @@ SNCR_app.controller("commonController", function ($scope, $http, $filter) {
 
 
     $scope.getNews = function (category) { // Getting News Data from DB
-        var url = 'localhost:5000/' + category;
+        var url = 'http://localhost:5000/' + category;
         $http
             .get(url)
             .then(function (resp) {
