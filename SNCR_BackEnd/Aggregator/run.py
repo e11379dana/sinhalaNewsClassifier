@@ -15,7 +15,7 @@ app = flask.Flask(__name__)
 app.secret_key = os.urandom(24)
 api = Api(app)
 CORS(app)
-api.add_resource(main, '/<string:Category>', endpoint='/')
+api.add_resource(main, '/category/<string:Category>', endpoint='/')
 api.add_resource(Login, '/login')
 
 def get_user_data(access_token):

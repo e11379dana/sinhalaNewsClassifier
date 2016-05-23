@@ -6,7 +6,7 @@ from mysql.connector import (connection)
 
 class main(Resource):
     def get(self, Category):
-        db = connection.MySQLConnection(user='root', password='',
+        db = connection.MySQLConnection(user='root', password='1234',
                                          host='127.0.0.1',
                                          database='NewsData',
                                          charset='utf8')
@@ -14,7 +14,6 @@ class main(Resource):
         # prepare a cursor object using cursor() method
         cursor = db.cursor()
 
-        print "+++++"
         print Category
 
         if (Category=='hotNews'):
