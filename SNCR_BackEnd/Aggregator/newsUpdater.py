@@ -1,11 +1,13 @@
-import feedparser
-import urllib.request as urllib2
+from future_builtins import ascii
 
+import feedparser
 import re
 import schedule
 import time
+import urllib2 as urllib2
 
 from bs4 import BeautifulSoup
+# from mysql import (connection)
 from mysql.connector import (connection)
 
 db = connection.MySQLConnection(user='root', password='',
@@ -16,27 +18,30 @@ db = connection.MySQLConnection(user='root', password='',
 # prepare a cursor object using cursor() method
 cursor = db.cursor()
 # Drop table if it already exist using execute() method.
-cursor.execute("DROP TABLE IF EXISTS NewsOrder")
+cursor.execute("DROP TABLE IF EXISTS newsorder")
 
 # Create table as per requirement
-sql = """CREATE TABLE NewsOrder (ID int NOT NULL AUTO_INCREMENT, title  VARCHAR(1000), link  VARCHAR(1000), description VARCHAR(1000), pubDate VARCHAR(1000), imgLink VARCHAR(11000), category int, newsId int, PRIMARY KEY (ID)) ENGINE = InnoDB DEFAULT CHARSET=utf8"""
+sql = """CREATE TABLE newsorder (ID int NOT NULL AUTO_INCREMENT, title  VARCHAR(1000), link  VARCHAR(1000), description VARCHAR(1000), imgLink VARCHAR(11000), category int, newsId int, PRIMARY KEY (ID)) ENGINE = InnoDB DEFAULT CHARSET=utf8"""
 
 cursor.execute(sql)
 
 # when first time accessing the news site
 
 feed = feedparser.parse('http://www.hirunews.lk/rss/sinhala.xml')
+
 for entry in feed['items']:
 
     length = len(entry['link'].split('/'))
-
     title = entry['title'].replace(" ", "")
+    print(title)
     asci = ascii(title)
+    asci = asci[1:].replace("'", "")
     urlTitle = asci.replace("\\", "%")
     url = entry['link'] + '/' + urlTitle
     content = urllib2.Request(url)
     res = urllib2.urlopen(content).read()
     soup = BeautifulSoup(res, "html.parser")
+
     rows = soup.find_all('div', attrs={"class": "latest-pic"})
     ans = re.findall('"([^"]*)"', str(rows))
 
@@ -47,10 +52,10 @@ for entry in feed['items']:
         cursor.execute(sql)
         db.commit()
         print("Scheduler is running.......")
-    except:
+    except Exception as e:
+        print e
         # Rollback in case there is any error
         db.rollback()
-
 
 def job():
 
@@ -63,16 +68,19 @@ def job():
         cursor.execute(sql1)
         result=cursor.fetchall()
         if len(result)==0:
-            print('+++++++++++++++++++++++++++++++++++++++')
             length = len(entry['link'].split('/'))
             # converting title into a url
             title = entry['title'].replace(" ", "")
             asci = ascii(title)
+            asci = asci[1:].replace("'", "")
             urlTitle = asci.replace("\\", "%")
             url = entry['link'] + '/' + urlTitle
             content = urllib2.Request(url)
             res = urllib2.urlopen(content).read()
-            soup = BeautifulSoup(res, "html.parser")
+            try:
+                soup = BeautifulSoup(res, "html.parser")
+            except:
+                print "Error"
             rows = soup.find_all('div', attrs={"class": "latest-pic"})
             ans = re.findall('"([^"]*)"', str(rows))
 
