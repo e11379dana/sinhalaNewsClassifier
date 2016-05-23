@@ -21,7 +21,7 @@ cursor = db.cursor()
 cursor.execute("DROP TABLE IF EXISTS newsorder")
 
 # Create table as per requirement
-sql = """CREATE TABLE newsorder (ID int NOT NULL AUTO_INCREMENT, title  VARCHAR(1000), link  VARCHAR(1000), description VARCHAR(1000), imgLink VARCHAR(11000), category int, newsId int, PRIMARY KEY (ID)) ENGINE = InnoDB DEFAULT CHARSET=utf8"""
+sql = """CREATE TABLE newsorder (ID int NOT NULL AUTO_INCREMENT, title  VARCHAR(1000), link  VARCHAR(1000), description VARCHAR(1000), imgLink VARCHAR(11000), category VARCHAR(100), newsId int, PRIMARY KEY (ID)) ENGINE = InnoDB DEFAULT CHARSET=utf8"""
 
 cursor.execute(sql)
 
@@ -33,7 +33,6 @@ for entry in feed['items']:
 
     length = len(entry['link'].split('/'))
     title = entry['title'].replace(" ", "")
-    print(title)
     asci = ascii(title)
     asci = asci[1:].replace("'", "")
     urlTitle = asci.replace("\\", "%")
@@ -46,7 +45,7 @@ for entry in feed['items']:
     ans = re.findall('"([^"]*)"', str(rows))
 
     sql = "INSERT INTO NewsOrder(title,link,description,imgLink,category,newsId) VALUES ('%s','%s','%s','%s','%s','%s') " % (
-        entry['title'], entry['link'], entry['description'], ans[2], 0, entry['link'].split('/')[length - 1])
+        entry['title'], entry['link'], entry['description'], ans[2], 'null', entry['link'].split('/')[length - 1])
 
     try:
         cursor.execute(sql)
@@ -85,7 +84,7 @@ def job():
             ans = re.findall('"([^"]*)"', str(rows))
 
             sql = "INSERT INTO NewsOrder(title,link,description,imgLink,category,newsId) VALUES ('%s','%s','%s','%s','%s','%s') " % (
-                entry['title'], entry['link'], entry['description'], ans[2], 0, entry['link'].split('/')[length - 1])
+                entry['title'], entry['link'], entry['description'], ans[2], 'null', entry['link'].split('/')[length - 1])
 
             try:
                 cursor.execute(sql)

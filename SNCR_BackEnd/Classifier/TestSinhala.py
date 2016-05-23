@@ -69,7 +69,7 @@ cursor.execute("SELECT * FROM NewsOrder")
 
 news = cursor.fetchall()
 for row in news:
-    if row[6]==0:
+    if row[5]=="null":
         file=io.open('test_sample.txt', 'w', encoding=('utf-8-sig'))
         file.write(row[3])
         f = io.open('test_sample.txt', 'r', encoding=('utf-8-sig')).read()
@@ -79,15 +79,15 @@ for row in news:
         politics=cl.is_pam(f)
         economy=cl.is_jam(f)
         if art['result']:
-            sql = "UPDATE NewsOrder SET category = '1' WHERE ID = '%s'" % (row[0])
+            sql = "UPDATE NewsOrder SET category = 'art' WHERE ID = '%s'" % (row[0])
         elif defence['result']:
-            sql = "UPDATE NewsOrder SET category = '2' WHERE ID = '%s'" % (row[0])
+            sql = "UPDATE NewsOrder SET category = 'defence' WHERE ID = '%s'" % (row[0])
         elif economy['result']:
-            sql = "UPDATE NewsOrder SET category = '3' WHERE ID = '%s'" % (row[0])
+            sql = "UPDATE NewsOrder SET category = 'economy' WHERE ID = '%s'" % (row[0])
         elif politics['result']:
-            sql = "UPDATE NewsOrder SET category = '4' WHERE ID = '%s'" % (row[0])
+            sql = "UPDATE NewsOrder SET category = 'politics' WHERE ID = '%s'" % (row[0])
         else:
-            sql = "UPDATE NewsOrder SET category = '5' WHERE ID = '%s'" % (row[0])
+            sql = "UPDATE NewsOrder SET category = 'sport' WHERE ID = '%s'" % (row[0])
 
         cursor.execute(sql)
         db.commit()
