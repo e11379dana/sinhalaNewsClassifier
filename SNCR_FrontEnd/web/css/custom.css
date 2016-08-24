@@ -29,3 +29,8 @@ footer {
     border-width: 0px;
     border-top-width: 5px;
 }
+
+p {
+    text-align: justify;
+    text-justify: inter-word;
+}

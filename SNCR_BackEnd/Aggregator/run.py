@@ -4,12 +4,12 @@ from httplib2 import Http
 import flask
 from flask_restful import Api
 from flask.ext.cors import CORS
-from urllib2 import Request, urlopen, URLError
 from flask import session
 
 
 from NewsList.index import *
 from Authentication import *
+from UserData.newsRecords import *
 
 app = flask.Flask(__name__)
 app.secret_key = os.urandom(24)
@@ -17,6 +17,7 @@ api = Api(app)
 CORS(app)
 api.add_resource(main, '/category/<string:Category>', endpoint='/')
 api.add_resource(Login, '/login')
+api.add_resource(userData, '/userHistory')
 
 def get_user_data(access_token):
     headers = {'Content-Type': 'text/html'}

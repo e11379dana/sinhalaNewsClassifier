@@ -12,15 +12,15 @@
     <div ng-repeat="item in items track by $index">
         <hr>
         <div class="row">
-            <div class="col-md-7">
+            <div class=" col-lg-7 col-sm-9">
                 <a href="#">
-                    <img class="img-responsive" src="http://placehold.it/700x300" alt="">
+                    <img ng-src={{item.image}} alt="Description" />
                 </a>
             </div>
-            <div class="col-md-5">
+            <div class="col-lg-5 col-sm-8" style="padding-left:30px">
                 <h3>{{item.title}}</h3>
                 <p>{{item.description}}</p>
-                <a class="btn btn-primary" href={{item.link}} target="_blank">Read more <span class="glyphicon glyphicon-chevron-right"></span></a>
+                <a class="btn btn-primary" href={{item.link}} target="_blank" ng-click="sendUserHistory(item.articleId,'1234')">Read more <span class="glyphicon glyphicon-chevron-right"></span></a>
             </div>
         </div>
     </div>
