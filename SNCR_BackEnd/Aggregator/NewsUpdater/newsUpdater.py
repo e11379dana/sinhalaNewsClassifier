@@ -24,6 +24,7 @@ class newsUpdater:
 
         print("Scheduler is running.......")
         feed = feedparser.parse(link)
+        print feed['items']
         for entry in feed['items']:
 
             length=len(entry['link'].split('/'))
@@ -51,20 +52,8 @@ class newsUpdater:
 
                 newsContentRows = soup.find_all('div', attrs={"class": newsContentClassName})
 
-
-                wf = io.open('news.txt', 'w', encoding='utf-8')
-                x = entry['description'].split('<a')[0]
-                wf.write(x)
-
-                rf = io.open('news.txt', 'r', encoding='utf-8').read()
-                print "================"
-                category = MultinomialNBClassifier().classify(rf)
-                print "================"
-
-
-
                 dao = DAO()
-                dao.insertNews(entry['title'], entry['link'], entry['description'].split('<a')[0], imageDetails[2], category,entry['link'].split('/')[length - 1],section)
+                dao.insertNews(entry['title'], entry['link'], entry['description'].split('<a')[0], imageDetails[2], 'NULL',entry['link'].split('/')[length - 1],section)
 
             else:
                 print 'No new news'

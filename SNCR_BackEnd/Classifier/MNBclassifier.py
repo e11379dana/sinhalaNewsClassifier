@@ -1,10 +1,12 @@
+import io
+
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.naive_bayes import MultinomialNB
-
+from SNCR_BackEnd.Aggregator.DAO import *
 
 class MultinomialNBClassifier:
 
-    def classify(self, text):
+    def classifier(self, text):
 
         #instantiate classifier and vectorizer
         clf=MultinomialNB(alpha=.01)
@@ -42,8 +44,22 @@ class MultinomialNBClassifier:
         #Train classifier
         clf.fit(X_train, y_train)
 
-        # Reading testing data file
-        with open('newsGroups\classify.txt', 'r') as myfile:
-            news=myfile.read().replace('\n', '')
 
         return clf.predict(vectorizer.transform([text]))
+
+    def classify(self):
+
+        dao = DAO();
+        # Get IDs of uncatergerized news to uncatNewsList
+        uncatNewsList = dao.selectUncategerizedNews();
+        for news in uncatNewsList:
+
+            description = dao.getDescriptionById(news[0])
+
+            wf = io.open('news.txt', 'w', encoding='utf-8')
+            x = description[0][0]
+            wf.write(x)
+            rf = io.open('news.txt', 'r', encoding='utf-8').read()
+
+            category = MultinomialNBClassifier().classifier(rf)
+            dao.updateNews(news[0],category[0])

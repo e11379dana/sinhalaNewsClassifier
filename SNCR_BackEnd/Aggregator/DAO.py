@@ -48,5 +48,30 @@ class DAO:
         self.con.commit()
 
 
+    def selectUncategerizedNews(self):
+        cursor = self._get_cursor()
+        sql = "select ID from NewsOrder where category='NULL'"
+        cursor.execute(sql)
+        newsList = cursor.fetchall()
+        cursor.close()
+
+        return newsList
+
+
+    def updateNews(self, ID, category):
+        cursor = self._get_cursor()
+        sql = "update newsOrder set category = '%s' where ID = '%s'"%(category, ID)
+        cursor.execute(sql)
+        self.con.commit()
+        cursor.close()
+
+    def getDescriptionById(self, ID):
+        cursor = self._get_cursor()
+        sql = "select description from NewsOrder where ID = '%s'"%(ID)
+        cursor.execute(sql)
+        description = cursor.fetchall()
+        cursor.close()
+
+        return description
 
 
